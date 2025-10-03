@@ -9,5 +9,5 @@ public interface BeerService {
 
     List<Beer> listBeers();
 
-    public Beer getBeerById(UUID id);
+    Beer getBeerById(UUID id);
 }
