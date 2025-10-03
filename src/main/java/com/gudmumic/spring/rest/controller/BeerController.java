@@ -4,11 +4,11 @@ import com.gudmumic.spring.rest.model.Beer;
 import com.gudmumic.spring.rest.service.BeerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,6 +41,8 @@ public class BeerController {
 
         Beer newBeer = beerService.createBeer(beer);
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        log.info("New Beer added to collection of Beers", newBeer);
+
+        return new ResponseEntity(newBeer, HttpHeaders.EMPTY, HttpStatus.CREATED);
     }
 }
