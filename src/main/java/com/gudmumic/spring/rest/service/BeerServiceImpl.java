@@ -3,7 +3,6 @@ package com.gudmumic.spring.rest.service;
 import com.gudmumic.spring.rest.model.Beer;
 import com.gudmumic.spring.rest.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
