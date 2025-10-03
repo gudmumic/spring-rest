@@ -43,6 +43,9 @@ public class BeerController {
 
         log.info("New Beer added to collection of Beers", newBeer);
 
-        return new ResponseEntity(newBeer, HttpHeaders.EMPTY, HttpStatus.CREATED);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/api/v1/beer/" + newBeer.getId().toString());
+
+        return new ResponseEntity(newBeer, headers, HttpStatus.CREATED);
     }
 }

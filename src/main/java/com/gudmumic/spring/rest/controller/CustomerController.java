@@ -1,14 +1,13 @@
 package com.gudmumic.spring.rest.controller;
 
-import com.gudmumic.spring.rest.model.Beer;
 import com.gudmumic.spring.rest.model.Customer;
 import com.gudmumic.spring.rest.service.CustomerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +19,18 @@ import java.util.UUID;
 public class CustomerController {
 
     private final CustomerService customerService;
+
+    @PostMapping
+    public ResponseEntity createCustomer(@RequestBody Customer customer) {
+        log.debug("Create new Customer - from controller");
+        Customer newCustomer = customerService.createCustomer(customer);
+        log.info("New Customer added to collection of Customers", newCustomer);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/api/v1/customer/" + newCustomer.getId().toString());
+
+        return new ResponseEntity(newCustomer, headers, HttpStatus.CREATED);
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Customer> getCustomerList() {
