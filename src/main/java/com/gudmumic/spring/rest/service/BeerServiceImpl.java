@@ -90,12 +90,31 @@ public class BeerServiceImpl implements BeerService {
         return new ArrayList<>(beerList.values());
     }
 
-
     @Override
     public Beer getBeerById(UUID id) {
 
         log.debug("Get Beer Information from Beer Id from service");
 
         return beerList.get(id);
+    }
+
+    @Override
+    public Beer createBeer(Beer beer) {
+
+        Beer createdBeer = Beer.builder()
+                .id(UUID.randomUUID())
+                .createdDate(LocalDateTime.now())
+                .updatedDate(LocalDateTime.now())
+                .version(1)
+                .name(beer.getName())
+                .quantityOnHand(beer.getQuantityOnHand())
+                .price(beer.getPrice())
+                .upc(beer.getUpc())
+                .style(beer.getStyle())
+                .build();
+
+        beerList.put(createdBeer.getId(), createdBeer);
+
+        return createdBeer;
     }
 }

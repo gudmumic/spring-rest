@@ -4,11 +4,11 @@ import com.gudmumic.spring.rest.model.Beer;
 import com.gudmumic.spring.rest.service.BeerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,8 +28,19 @@ public class BeerController {
     @RequestMapping(value = "{beerId}", method = RequestMethod.GET)
     public Beer getBeerByStyle(@PathVariable("beerId") UUID beerId) {
 
-        log.debug("Bet Beer by ID - from controller");
+        log.debug("Bet Beer by ID - from beer controller");
 
         return beerService.getBeerById(beerId);
+    }
+
+    @PostMapping
+    //@RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity createBeer(@RequestBody Beer beer) {
+
+        log.debug("Create new Beer - from beer controller");
+
+        Beer newBeer = beerService.createBeer(beer);
+
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 }
