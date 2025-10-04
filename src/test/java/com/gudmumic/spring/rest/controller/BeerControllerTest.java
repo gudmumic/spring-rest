@@ -3,8 +3,10 @@ package com.gudmumic.spring.rest.controller;
 import com.gudmumic.spring.rest.model.Beer;
 import com.gudmumic.spring.rest.service.BeerService;
 import com.gudmumic.spring.rest.service.BeerServiceImpl;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -14,6 +16,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.hamcrest.core.Is.is;
@@ -98,5 +101,18 @@ class BeerControllerTest {
                         .content(objectMapper.writeValueAsString(testBeer)));
 
         verify(beerService).updateBeer(any(UUID.class), any(Beer.class));
+    }
+
+    @Test
+    void deleteBeer() throws Exception {
+
+        mockMvc.perform(delete("/api/v1/beer/" + testBeer.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isNoContent());
+
+        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
+        verify(beerService).deleteBeer(uuidArgumentCaptor.capture());
+
+        assertThat(uuidArgumentCaptor.getValue().equals(testBeer.getId()));
     }
 }
