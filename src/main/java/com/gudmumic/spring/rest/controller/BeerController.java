@@ -61,7 +61,7 @@ public class BeerController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/api/v1/beer/" + updatedBeer.getId().toString());
 
-        return new ResponseEntity(updatedBeer, headers, HttpStatus.CREATED);
+        return new ResponseEntity(updatedBeer, headers, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(value = "{beerId}")
@@ -69,13 +69,13 @@ public class BeerController {
 
         log.debug("Delete Beer - from beer controller");
 
-        Beer deletedBeer = beerService.deleteBeer(id);
+        beerService.deleteBeer(id);
 
-        log.info("Beer deleted from collection of Beers", deletedBeer);
+        log.info("Beer deleted from collection of Beers");
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/beer/" + deletedBeer.getId().toString());
+        headers.add("Location", "/api/v1/beer/" + id);
 
-        return new ResponseEntity(deletedBeer, headers, HttpStatus.CREATED);
+        return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }
 }

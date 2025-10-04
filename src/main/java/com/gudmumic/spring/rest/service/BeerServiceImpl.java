@@ -134,7 +134,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Beer deleteBeer(UUID id) {
-        return null;
+    public void deleteBeer(UUID id) {
+        beerList.remove(id);
     }
 }
