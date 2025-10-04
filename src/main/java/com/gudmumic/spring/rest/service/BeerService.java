@@ -13,7 +13,7 @@ public interface BeerService {
 
     Beer createBeer(Beer beer);
 
-    Beer updateBeer(UUID id, Beer beer);
+    void updateBeer(UUID id, Beer beer);
 
     void deleteBeer(UUID id);
 }

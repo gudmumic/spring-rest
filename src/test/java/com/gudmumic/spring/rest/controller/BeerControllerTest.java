@@ -12,11 +12,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.UUID;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BeerController.class)
@@ -33,15 +35,16 @@ class BeerControllerTest {
 
     BeerServiceImpl beerServiceImpl;
 
+    Beer testBeer;
+
     @BeforeEach
     void setUp() {
         beerServiceImpl = new BeerServiceImpl();
+        testBeer  = beerServiceImpl.getBeerList().get(0);
     }
 
     @Test
     void getBeerById() throws Exception {
-
-        Beer testBeer = beerServiceImpl.getBeerList().get(0);
 
         given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
 
@@ -67,7 +70,6 @@ class BeerControllerTest {
 
     @Test
     void createNewBeer() throws Exception {
-        Beer testBeer = beerServiceImpl.getBeerList().get(0);
         testBeer.setId(null);
         testBeer.setVersion(null);
         testBeer.setCreatedDate(null);
@@ -86,4 +88,15 @@ class BeerControllerTest {
                 .andExpect(jsonPath("$.name", is(beerServiceImpl.getBeerList().get(1).getName())));
     }
 
+    @Test
+    void updateNewBeer() throws Exception {
+        testBeer.setName("My New Beer Name");
+
+        mockMvc.perform(put("/api/v1/beer/" + testBeer.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testBeer)));
+
+        verify(beerService).updateBeer(any(UUID.class), any(Beer.class));
+    }
 }

@@ -119,7 +119,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Beer updateBeer(UUID id, Beer beer) {
+    public void updateBeer(UUID id, Beer beer) {
         Beer existing = beerList.get(id);
         if (existing != null) {
             existing.setName(beer.getName());
@@ -130,7 +130,6 @@ public class BeerServiceImpl implements BeerService {
             existing.setUpdatedDate(LocalDateTime.now());
             beerList.put(existing.getId(), existing);
         }
-        return existing;
     }
 
     @Override

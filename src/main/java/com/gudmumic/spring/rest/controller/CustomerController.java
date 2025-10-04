@@ -48,12 +48,12 @@ public class CustomerController {
     @PutMapping("{customerId}")
     public ResponseEntity updateCustomer(@PathVariable("customerId") UUID id, @RequestBody Customer customer) {
         log.debug("Update Customer - from controller");
-        Customer updatedCustomer = customerService.updateCustomer(id, customer);
+        customerService.updateCustomer(id, customer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/customer/" + updatedCustomer.getId().toString());
+        headers.add("Location", "/api/v1/customer/" + id);
 
-        return new ResponseEntity(updatedCustomer, headers, HttpStatus.NO_CONTENT);
+        return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("{customerId}")

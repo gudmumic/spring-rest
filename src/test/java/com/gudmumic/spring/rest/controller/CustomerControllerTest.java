@@ -13,11 +13,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.UUID;
+
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
@@ -34,15 +36,16 @@ class CustomerControllerTest {
 
     CustomerServiceImpl customerServiceImpl;
 
+    Customer testCustomer;
+
     @BeforeEach
     void setUp() {
         customerServiceImpl = new CustomerServiceImpl();
+        testCustomer = customerServiceImpl.getCustomerList().get(0);
     }
 
     @Test
     void getCustomerById() throws Exception {
-
-        Customer testCustomer = customerServiceImpl.getCustomerList().get(0);
 
         given(customerService.getCustomerById(testCustomer.getId())).willReturn(testCustomer);
 
@@ -68,7 +71,6 @@ class CustomerControllerTest {
 
     @Test
     void createNewCustomer() throws Exception {
-        Customer testCustomer = customerServiceImpl.getCustomerList().get(0);
         testCustomer.setId(null);
         testCustomer.setVersion(null);
         testCustomer.setCreatedDate(null);
@@ -86,4 +88,18 @@ class CustomerControllerTest {
                 .andExpect(jsonPath("$.id", is(customerServiceImpl.getCustomerList().get(1).getId().toString())))
                 .andExpect(jsonPath("$.name", is(customerServiceImpl.getCustomerList().get(1).getName())));
     }
+
+    @Test
+    void updateNewCustomer() throws Exception {
+        testCustomer.setName("My New Beer Name");
+
+        mockMvc.perform(put("/api/v1/customer/" + testCustomer.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testCustomer)));
+
+        verify(customerService).updateCustomer(any(UUID.class), any(Customer.class));
+    }
+
+
 }

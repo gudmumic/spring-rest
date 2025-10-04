@@ -34,7 +34,6 @@ public class BeerController {
     }
 
     @PostMapping
-    //@RequestMapping(method = RequestMethod.POST)
     public ResponseEntity createBeer(@RequestBody Beer beer) {
 
         log.debug("Create new Beer - from beer controller");
@@ -54,14 +53,14 @@ public class BeerController {
 
         log.debug("Update existing Beer - from beer controller");
 
-        Beer updatedBeer = beerService.updateBeer(id, beer);
+        beerService.updateBeer(id, beer);
 
-        log.info("Updated Beer from collection of Beers", updatedBeer);
+        log.info("Updated Beer from collection of Beers");
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/beer/" + updatedBeer.getId().toString());
+        headers.add("Location", "/api/v1/beer/" + id);
 
-        return new ResponseEntity(updatedBeer, headers, HttpStatus.NO_CONTENT);
+        return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(value = "{beerId}")

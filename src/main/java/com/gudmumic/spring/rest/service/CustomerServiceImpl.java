@@ -65,9 +65,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer updateCustomer(UUID id, Customer customer) {
+    public void updateCustomer(UUID id, Customer customer) {
+        log.debug("updating customer with id" + id);
         if(customerMap.containsKey(id)) {
-            log.debug("updating customer with id" + id);
             Customer updatedCustomer = Customer.builder()
                                                 .id(id)
                                                 .name(customer.getName())
@@ -79,10 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
             customerMap.put(id, updatedCustomer);
 
             log.info("Updated Customer added to collection of Customers", updatedCustomer);
-
-            return updatedCustomer;
         }
-        return null;
     }
 
     @Override
