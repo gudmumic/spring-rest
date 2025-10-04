@@ -20,18 +20,6 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    @PostMapping
-    public ResponseEntity createCustomer(@RequestBody Customer customer) {
-        log.debug("Create new Customer - from controller");
-        Customer newCustomer = customerService.createCustomer(customer);
-        log.info("New Customer added to collection of Customers", newCustomer);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/customer/" + newCustomer.getId().toString());
-
-        return new ResponseEntity(newCustomer, headers, HttpStatus.CREATED);
-    }
-
     @RequestMapping(method = RequestMethod.GET)
     public List<Customer> getCustomerList() {
         return customerService.listCustomers();
@@ -44,4 +32,28 @@ public class CustomerController {
 
         return customerService.getCustomerById(customerId);
     }
+
+    @PostMapping
+    public ResponseEntity createCustomer(@RequestBody Customer customer) {
+        log.debug("Create new Customer - from controller");
+        Customer newCustomer = customerService.createCustomer(customer);
+        log.info("New Customer added to collection of Customers", newCustomer);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/api/v1/customer/" + newCustomer.getId().toString());
+
+        return new ResponseEntity(newCustomer, headers, HttpStatus.CREATED);
+    }
+
+    @PutMapping("{customerId}")
+    public ResponseEntity updateCustomer(@PathVariable("customerId") UUID id, @RequestBody Customer customer) {
+        log.debug("Update Customer - from controller");
+        Customer updatedCustomer = customerService.updateCustomer(id, customer);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/api/v1/customer/" + updatedCustomer.getId().toString());
+
+        return new ResponseEntity(updatedCustomer, headers, HttpStatus.NO_CONTENT);
+    }
+
 }
