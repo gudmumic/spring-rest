@@ -30,7 +30,7 @@ class BeerControllerTest {
     @Test
     void getBeerById() throws Exception {
 
-        Beer testBeer = beerServiceImpl.listBeers().get(0);
+        Beer testBeer = beerServiceImpl.getBeerList().get(0);
 
         given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
 
@@ -45,12 +45,12 @@ class BeerControllerTest {
     @Test
     void getBeerList() throws Exception {
 
-        given(beerService.listBeers()).willReturn(beerServiceImpl.listBeers());
+        given(beerService.getBeerList()).willReturn(beerServiceImpl.getBeerList());
 
         mockMvc.perform(get("/api/v1/beer")
                 .accept(String.valueOf(MediaType.APPLICATION_JSON)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(beerServiceImpl.listBeers().size())));
+                .andExpect(jsonPath("$.length()", is(beerServiceImpl.getBeerList().size())));
     }
 }

@@ -2,7 +2,7 @@ package com.gudmumic.spring.rest.controller;
 
 import com.gudmumic.spring.rest.model.Customer;
 import com.gudmumic.spring.rest.service.CustomerService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/customer")
 public class CustomerController {
@@ -22,7 +22,7 @@ public class CustomerController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Customer> getCustomerList() {
-        return customerService.listCustomers();
+        return customerService.getCustomerList();
     }
 
     @RequestMapping(value = "{customerId}", method = RequestMethod.GET)

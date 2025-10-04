@@ -22,7 +22,7 @@ public class BeerController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Beer> getBeerList() {
-        return beerService.listBeers();
+        return beerService.getBeerList();
     }
 
     @RequestMapping(value = "{beerId}", method = RequestMethod.GET)
