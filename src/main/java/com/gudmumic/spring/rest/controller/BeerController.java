@@ -15,25 +15,28 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/beer")
 public class BeerController {
+
+    public static final String BEER_PATH = "/api/v1/beer";
+    public static final String BEER_PATH_ID = BEER_PATH + "/{beerId}";
+    public static final String PATH_VARIABLE_ID = "beerId";
 
     private final BeerService beerService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(value = BEER_PATH)
     public List<Beer> getBeerList() {
         return beerService.getBeerList();
     }
 
-    @RequestMapping(value = "{beerId}", method = RequestMethod.GET)
-    public Beer getBeerById(@PathVariable("beerId") UUID beerId) {
+    @GetMapping(value = BEER_PATH_ID)
+    public Beer getBeerById(@PathVariable(PATH_VARIABLE_ID) UUID beerId) {
 
         log.debug("Bet Beer by ID - from beer controller");
 
         return beerService.getBeerById(beerId);
     }
 
-    @PostMapping
+    @PostMapping(value = BEER_PATH)
     public ResponseEntity createBeer(@RequestBody Beer beer) {
 
         log.debug("Create new Beer - from beer controller");
@@ -48,8 +51,8 @@ public class BeerController {
         return new ResponseEntity(newBeer, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "{beerId}")
-    public ResponseEntity updateBeer(@PathVariable("beerId")  UUID id, @RequestBody Beer beer) {
+    @PutMapping(value = BEER_PATH_ID)
+    public ResponseEntity updateBeer(@PathVariable(PATH_VARIABLE_ID)  UUID id, @RequestBody Beer beer) {
 
         log.debug("Update existing Beer - from beer controller");
 
@@ -63,8 +66,8 @@ public class BeerController {
         return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping(value = "{beerId}")
-    public ResponseEntity deleteBeer(@PathVariable("beerId")  UUID id) {
+    @DeleteMapping(value = BEER_PATH_ID)
+    public ResponseEntity deleteBeer(@PathVariable(PATH_VARIABLE_ID)  UUID id) {
 
         log.debug("Delete Beer - from beer controller");
 
