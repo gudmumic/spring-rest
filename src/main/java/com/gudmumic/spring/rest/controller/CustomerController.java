@@ -15,54 +15,57 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/customer")
 public class CustomerController {
+
+    public static final String CUSTOMER_PATH = "/api/v1/customer";
+    public static final String CUSTOMER_PATH_ID = CUSTOMER_PATH + "/{customerId}";
+    public static final String CUSTOMER_ID = "customerId";
 
     private final CustomerService customerService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(value = CUSTOMER_PATH)
     public List<Customer> getCustomerList() {
         return customerService.getCustomerList();
     }
 
-    @RequestMapping(value = "{customerId}", method = RequestMethod.GET)
-    public Customer getCustomerByStyle(@PathVariable("customerId") UUID customerId) {
+    @GetMapping(value = CUSTOMER_PATH_ID)
+    public Customer getCustomerByStyle(@PathVariable(CUSTOMER_ID) UUID customerId) {
 
         log.debug("Bet Customer by ID - from controller");
 
         return customerService.getCustomerById(customerId);
     }
 
-    @PostMapping
+    @PostMapping(value = CUSTOMER_PATH)
     public ResponseEntity createCustomer(@RequestBody Customer customer) {
         log.debug("Create new Customer - from controller");
         Customer newCustomer = customerService.createCustomer(customer);
         log.info("New Customer added to collection of Customers", newCustomer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/customer/" + newCustomer.getId().toString());
+        headers.add("Location", CUSTOMER_PATH_ID + newCustomer.getId().toString());
 
         return new ResponseEntity(newCustomer, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping("{customerId}")
-    public ResponseEntity updateCustomer(@PathVariable("customerId") UUID id, @RequestBody Customer customer) {
+    @PutMapping(value = CUSTOMER_PATH_ID)
+    public ResponseEntity updateCustomer(@PathVariable(CUSTOMER_ID) UUID id, @RequestBody Customer customer) {
         log.debug("Update Customer - from controller");
         customerService.updateCustomer(id, customer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/customer/" + id);
+        headers.add("Location", CUSTOMER_PATH_ID + id);
 
         return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("{customerId}")
-    public ResponseEntity deleteCustomer(@PathVariable("customerId") UUID id) {
+    @DeleteMapping(CUSTOMER_PATH_ID)
+    public ResponseEntity deleteCustomer(@PathVariable(CUSTOMER_ID) UUID id) {
         log.debug("Delete a Customer - from controller");
         customerService.deleteCustomer(id);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/customer/" + id);
+        headers.add("Location", CUSTOMER_PATH_ID + id);
 
         return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }

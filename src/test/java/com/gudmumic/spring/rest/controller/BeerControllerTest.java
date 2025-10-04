@@ -3,10 +3,11 @@ package com.gudmumic.spring.rest.controller;
 import com.gudmumic.spring.rest.model.Beer;
 import com.gudmumic.spring.rest.service.BeerService;
 import com.gudmumic.spring.rest.service.BeerServiceImpl;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -17,9 +18,9 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -36,12 +37,19 @@ class BeerControllerTest {
     @MockitoBean
     BeerService beerService;
 
+    @Captor
+    ArgumentCaptor<UUID> uuidArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<Beer> beerArgumentCaptor;
+
     BeerServiceImpl beerServiceImpl;
 
     Beer testBeer;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         beerServiceImpl = new BeerServiceImpl();
         testBeer  = beerServiceImpl.getBeerList().get(0);
     }
@@ -110,7 +118,6 @@ class BeerControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isNoContent());
 
-        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
         verify(beerService).deleteBeer(uuidArgumentCaptor.capture());
 
         assertThat(uuidArgumentCaptor.getValue().equals(testBeer.getId()));
