@@ -14,4 +14,6 @@ public interface BeerService {
     Beer createBeer(Beer beer);
 
     Beer updateBeer(UUID id, Beer beer);
+
+    Beer deleteBeer(UUID id);
 }

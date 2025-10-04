@@ -132,4 +132,9 @@ public class BeerServiceImpl implements BeerService {
         }
         return existing;
     }
+
+    @Override
+    public Beer deleteBeer(UUID id) {
+        return null;
+    }
 }
