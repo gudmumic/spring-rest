@@ -33,7 +33,7 @@ public class CustomerController {
 
         log.debug("Bet Customer by ID - from controller");
 
-        return customerService.getCustomerById(customerId);
+        return customerService.getCustomerById(customerId).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(value = CUSTOMER_PATH)

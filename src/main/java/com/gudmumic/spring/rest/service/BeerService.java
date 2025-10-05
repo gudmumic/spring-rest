@@ -3,13 +3,14 @@ package com.gudmumic.spring.rest.service;
 import com.gudmumic.spring.rest.model.Beer;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface BeerService {
 
     List<Beer> getBeerList();
 
-    Beer getBeerById(UUID id);
+    Optional<Beer> getBeerById(UUID id);
 
     Beer createBeer(Beer beer);
 

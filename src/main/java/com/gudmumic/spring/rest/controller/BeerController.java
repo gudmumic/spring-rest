@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -31,9 +32,9 @@ public class BeerController {
     @GetMapping(value = BEER_PATH_ID)
     public Beer getBeerById(@PathVariable(PATH_VARIABLE_ID) UUID beerId) {
 
-        log.debug("Bet Beer by ID - from beer controller");
+        log.debug("Get Beer by ID - from beer controller");
 
-        return beerService.getBeerById(beerId);
+        return beerService.getBeerById(beerId).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(value = BEER_PATH)
@@ -80,4 +81,6 @@ public class BeerController {
 
         return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }
+
+
 }
