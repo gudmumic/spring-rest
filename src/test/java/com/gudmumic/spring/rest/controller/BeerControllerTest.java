@@ -1,6 +1,6 @@
 package com.gudmumic.spring.rest.controller;
 
-import com.gudmumic.spring.rest.model.Beer;
+import com.gudmumic.spring.rest.model.BeerDTO;
 import com.gudmumic.spring.rest.service.BeerService;
 import com.gudmumic.spring.rest.service.BeerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,30 +42,30 @@ class BeerControllerTest {
     ArgumentCaptor<UUID> uuidArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<Beer> beerArgumentCaptor;
+    ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
     BeerServiceImpl beerServiceImpl;
 
-    Beer testBeer;
+    BeerDTO testBeerDTO;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         beerServiceImpl = new BeerServiceImpl();
-        testBeer  = beerServiceImpl.getBeerList().get(0);
+        testBeerDTO = beerServiceImpl.getBeerList().get(0);
     }
 
     @Test
     void getBeerById() throws Exception {
 
-        given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
+        given(beerService.getBeerById(testBeerDTO.getId())).willReturn(Optional.of(testBeerDTO));
 
-        mockMvc.perform(get(BeerController.BEER_PATH_ID, testBeer.getId())
+        mockMvc.perform(get(BeerController.BEER_PATH_ID, testBeerDTO.getId())
                 .accept((MediaType.APPLICATION_JSON)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
-                .andExpect(jsonPath("$.name", is(testBeer.getName())));
+                .andExpect(jsonPath("$.id", is(testBeerDTO.getId().toString())))
+                .andExpect(jsonPath("$.name", is(testBeerDTO.getName())));
     }
 
     @Test
@@ -91,17 +91,17 @@ class BeerControllerTest {
 
     @Test
     void createNewBeer() throws Exception {
-        testBeer.setId(null);
-        testBeer.setVersion(null);
-        testBeer.setCreatedDate(null);
-        testBeer.setUpdatedDate(null);
+        testBeerDTO.setId(null);
+        testBeerDTO.setVersion(null);
+        testBeerDTO.setCreatedDate(null);
+        testBeerDTO.setUpdatedDate(null);
 
-        given(beerService.createBeer(any(Beer.class))).willReturn(beerServiceImpl.getBeerList().get(1));
+        given(beerService.createBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.getBeerList().get(1));
 
         mockMvc.perform(post(BeerController.BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testBeer)))
+                        .content(objectMapper.writeValueAsString(testBeerDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(header().exists("Location"))
@@ -111,25 +111,29 @@ class BeerControllerTest {
 
     @Test
     void updateNewBeer() throws Exception {
-        testBeer.setName("My New Beer Name");
+        testBeerDTO.setName("My New Beer Name");
 
-        mockMvc.perform(put(BeerController.BEER_PATH_ID, testBeer.getId())
+        given(beerService.updateBeer(any(UUID.class), any(BeerDTO.class))).willReturn(Optional.of(testBeerDTO));
+
+        mockMvc.perform(put(BeerController.BEER_PATH_ID, testBeerDTO.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testBeer)));
+                        .content(objectMapper.writeValueAsString(testBeerDTO)));
 
-        verify(beerService).updateBeer(any(UUID.class), any(Beer.class));
+        verify(beerService).updateBeer(any(UUID.class), any(BeerDTO.class));
     }
 
     @Test
     void deleteBeer() throws Exception {
 
-        mockMvc.perform(delete(BeerController.BEER_PATH_ID, testBeer.getId())
+        given(beerService.deleteBeer(any())).willReturn(true);
+
+        mockMvc.perform(delete(BeerController.BEER_PATH_ID, testBeerDTO.getId())
                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isNoContent());
 
         verify(beerService).deleteBeer(uuidArgumentCaptor.capture());
 
-        assertThat(uuidArgumentCaptor.getValue().equals(testBeer.getId()));
+        assertThat(uuidArgumentCaptor.getValue().equals(testBeerDTO.getId()));
     }
 }

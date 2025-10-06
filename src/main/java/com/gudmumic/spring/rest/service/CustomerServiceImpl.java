@@ -1,6 +1,6 @@
 package com.gudmumic.spring.rest.service;
 
-import com.gudmumic.spring.rest.model.Customer;
+import com.gudmumic.spring.rest.model.CustomerDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.*;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    Map<UUID, Customer> customerMap;
+    Map<UUID, CustomerDTO> customerMap;
 
     public CustomerServiceImpl() {
 
@@ -19,7 +19,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerMap = new HashMap<>();
 
-        Customer michael = Customer.builder()
+        CustomerDTO michael = CustomerDTO.builder()
                                 .id(UUID.randomUUID())
                                 .name("Michael Nielsen")
                                 .version(58)
@@ -27,7 +27,7 @@ public class CustomerServiceImpl implements CustomerService {
                                 .updatedDate(LocalDateTime.now())
                                 .build();
 
-        Customer marianne = Customer.builder()
+        CustomerDTO marianne = CustomerDTO.builder()
                                 .id(UUID.randomUUID())
                                 .name("Marianne Gudmundseth Nielsen")
                                 .version(56)
@@ -40,50 +40,56 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> getCustomerList() {
+    public List<CustomerDTO> getCustomerList() {
         return new ArrayList<>(customerMap.values());
     }
 
     @Override
-    public Optional<Customer> getCustomerById(UUID id) {
+    public Optional<CustomerDTO> getCustomerById(UUID id) {
         return Optional.ofNullable(customerMap.get(id));
     }
 
     @Override
-    public Customer createCustomer(Customer customer) {
+    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
 
-        Customer newCustomer = Customer.builder()
+        CustomerDTO newCustomerDTO = CustomerDTO.builder()
                                         .id(UUID.randomUUID())
-                                        .name(customer.getName())
+                                        .name(customerDTO.getName())
                                         .version(1)
                                         .createdDate(LocalDateTime.now())
                                         .updatedDate(LocalDateTime.now())
                                         .build();
 
-        customerMap.put(newCustomer.getId(), newCustomer);
-        return newCustomer;
+        customerMap.put(newCustomerDTO.getId(), newCustomerDTO);
+        return newCustomerDTO;
     }
 
     @Override
-    public void updateCustomer(UUID id, Customer customer) {
+    public Optional<CustomerDTO> updateCustomer(UUID id, CustomerDTO customerDTO) {
         log.debug("updating customer with id" + id);
         if(customerMap.containsKey(id)) {
-            Customer updatedCustomer = Customer.builder()
+            CustomerDTO updatedCustomerDTO = CustomerDTO.builder()
                                                 .id(id)
-                                                .name(customer.getName())
+                                                .name(customerDTO.getName())
                                                 .version(customerMap.get(id).getVersion() + 1)
                                                 .createdDate(customerMap.get(id).getCreatedDate())
                                                 .updatedDate(LocalDateTime.now())
                                                 .build();
 
-            customerMap.put(id, updatedCustomer);
+            customerMap.put(id, updatedCustomerDTO);
 
-            log.info("Updated Customer added to collection of Customers", updatedCustomer);
+            log.info("Updated Customer added to collection of Customers", updatedCustomerDTO);
+            return Optional.of(updatedCustomerDTO);
         }
+        return Optional.empty();
     }
 
     @Override
-    public void deleteCustomer(UUID id) {
-        customerMap.remove(id);
+    public Boolean deleteCustomer(UUID id) {
+        if (!customerMap.containsKey(id)) {
+            customerMap.remove(id);
+            return true;
+        }
+        return false;
     }
 }

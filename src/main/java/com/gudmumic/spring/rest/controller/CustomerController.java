@@ -1,6 +1,6 @@
 package com.gudmumic.spring.rest.controller;
 
-import com.gudmumic.spring.rest.model.Customer;
+import com.gudmumic.spring.rest.model.CustomerDTO;
 import com.gudmumic.spring.rest.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +24,12 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping(value = CUSTOMER_PATH)
-    public List<Customer> getCustomerList() {
+    public List<CustomerDTO> getCustomerList() {
         return customerService.getCustomerList();
     }
 
     @GetMapping(value = CUSTOMER_PATH_ID)
-    public Customer getCustomerByStyle(@PathVariable(CUSTOMER_ID) UUID customerId) {
+    public CustomerDTO getCustomerById(@PathVariable(CUSTOMER_ID) UUID customerId) {
 
         log.debug("Bet Customer by ID - from controller");
 
@@ -37,24 +37,27 @@ public class CustomerController {
     }
 
     @PostMapping(value = CUSTOMER_PATH)
-    public ResponseEntity createCustomer(@RequestBody Customer customer) {
+    public ResponseEntity createCustomer(@RequestBody CustomerDTO customerDTO) {
         log.debug("Create new Customer - from controller");
-        Customer newCustomer = customerService.createCustomer(customer);
-        log.info("New Customer added to collection of Customers", newCustomer);
+        CustomerDTO newCustomerDTO = customerService.createCustomer(customerDTO);
+        log.info("New Customer added to collection of Customers", newCustomerDTO);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", CUSTOMER_PATH_ID + newCustomer.getId().toString());
+        headers.add("Location", "/api/v1/customer/" + newCustomerDTO.getId().toString());
 
-        return new ResponseEntity(newCustomer, headers, HttpStatus.CREATED);
+        return new ResponseEntity(newCustomerDTO, headers, HttpStatus.CREATED);
     }
 
     @PutMapping(value = CUSTOMER_PATH_ID)
-    public ResponseEntity updateCustomer(@PathVariable(CUSTOMER_ID) UUID id, @RequestBody Customer customer) {
+    public ResponseEntity updateCustomer(@PathVariable(CUSTOMER_ID) UUID id, @RequestBody CustomerDTO customerDTO) {
         log.debug("Update Customer - from controller");
-        customerService.updateCustomer(id, customer);
+
+        if (customerService.updateCustomer(id, customerDTO).isEmpty()) {;
+            throw new NotFoundException();
+        }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", CUSTOMER_PATH_ID + id);
+        headers.add("Location", "/api/v1/customer/" + id);
 
         return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }
@@ -62,10 +65,13 @@ public class CustomerController {
     @DeleteMapping(CUSTOMER_PATH_ID)
     public ResponseEntity deleteCustomer(@PathVariable(CUSTOMER_ID) UUID id) {
         log.debug("Delete a Customer - from controller");
-        customerService.deleteCustomer(id);
+
+        if (!customerService.deleteCustomer(id)) {;
+            throw new NotFoundException();
+        }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", CUSTOMER_PATH_ID + id);
+        headers.add("Location", "/api/v1/customer/" + id);
 
         return new ResponseEntity(headers, HttpStatus.NO_CONTENT);
     }

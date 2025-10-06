@@ -1,6 +1,6 @@
 package com.gudmumic.spring.rest.service;
 
-import com.gudmumic.spring.rest.model.Customer;
+import com.gudmumic.spring.rest.model.CustomerDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,13 +8,13 @@ import java.util.UUID;
 
 public interface CustomerService {
 
-    List<Customer> getCustomerList();
+    List<CustomerDTO> getCustomerList();
 
-    Optional<Customer> getCustomerById(UUID id);
+    Optional<CustomerDTO> getCustomerById(UUID id);
 
-    Customer createCustomer(Customer customer);
+    CustomerDTO createCustomer(CustomerDTO customerDTO);
 
-    void updateCustomer(UUID id, Customer customer);
+    Optional<CustomerDTO> updateCustomer(UUID id, CustomerDTO customerDTO);
 
-    void deleteCustomer(UUID id);
+    Boolean deleteCustomer(UUID id);
 }

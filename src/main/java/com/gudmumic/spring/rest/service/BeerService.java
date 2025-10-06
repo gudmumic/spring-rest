@@ -1,6 +1,6 @@
 package com.gudmumic.spring.rest.service;
 
-import com.gudmumic.spring.rest.model.Beer;
+import com.gudmumic.spring.rest.model.BeerDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,13 +8,13 @@ import java.util.UUID;
 
 public interface BeerService {
 
-    List<Beer> getBeerList();
+    List<BeerDTO> getBeerList();
 
-    Optional<Beer> getBeerById(UUID id);
+    Optional<BeerDTO> getBeerById(UUID id);
 
-    Beer createBeer(Beer beer);
+    BeerDTO createBeer(BeerDTO beerDTO);
 
-    void updateBeer(UUID id, Beer beer);
+    Optional<BeerDTO> updateBeer(UUID id, BeerDTO beerDTO);
 
-    void deleteBeer(UUID id);
+    Boolean deleteBeer(UUID id);
 }
