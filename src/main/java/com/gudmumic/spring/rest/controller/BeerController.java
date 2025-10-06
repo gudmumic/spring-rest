@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class BeerController {
     }
 
     @PostMapping(value = BEER_PATH)
-    public ResponseEntity createBeer(@RequestBody BeerDTO beerDTO) {
+    public ResponseEntity createBeer(@Validated @RequestBody BeerDTO beerDTO) {
 
         log.debug("Create new Beer - from beer controller");
 
@@ -52,7 +53,7 @@ public class BeerController {
     }
 
     @PutMapping(value = BEER_PATH_ID)
-    public ResponseEntity updateBeer(@PathVariable(PATH_VARIABLE_ID)  UUID id, @RequestBody BeerDTO beerDTO) {
+    public ResponseEntity updateBeer(@PathVariable(PATH_VARIABLE_ID)  UUID id, @Validated @RequestBody BeerDTO beerDTO) {
 
         log.debug("Update existing Beer - from beer controller");
 

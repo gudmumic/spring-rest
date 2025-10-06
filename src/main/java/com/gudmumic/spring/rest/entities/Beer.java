@@ -2,6 +2,10 @@ package com.gudmumic.spring.rest.entities;
 
 import com.gudmumic.spring.rest.model.BeerStyle;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -24,11 +28,21 @@ public class Beer {
     private UUID id;
     @Version
     private Integer version;
+    @NotBlank
+    @NotNull
+    @Size(max = 100)
+    @Column(length = 100, nullable = false)
     private String name;
+    @NotNull
     private BeerStyle style;
+    @NotBlank
+    @NotNull
+    @Size(max = 255)
     private String upc;
-    private Integer quantityOnHand;
+    @NotNull
+    @PositiveOrZero
     private BigDecimal price;
+    private Integer quantityOnHand;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
