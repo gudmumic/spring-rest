@@ -12,6 +12,7 @@ import java.util.Properties;
 public class SpringRestApplication {
 
 	public static void main(String[] args) {
+/*
         Properties mysqlProps = new Properties();
         try (FileReader reader = new FileReader("./src/main/resources/application-docker-mysql.properties")) {
             mysqlProps.load(reader);
@@ -19,6 +20,7 @@ public class SpringRestApplication {
         } catch (IOException e) {
             e.printStackTrace();
         }
+*/
 		SpringApplication.run(SpringRestApplication.class, args);
 	}
 
