@@ -90,6 +90,7 @@ public class BootstrapData implements CommandLineRunner {
         if (customerRepository.count() == 0) {
             Customer michael = Customer.builder()
                     .name("Michael Nielsen")
+                    .email("gudmundseth@gmail.com")
                     .version(58)
                     .createdDate(LocalDateTime.now())
                     .updatedDate(LocalDateTime.now())
@@ -97,6 +98,7 @@ public class BootstrapData implements CommandLineRunner {
 
             Customer marianne = Customer.builder()
                     .name("Marianne Gudmundseth Nielsen")
+                    .email("gudmundseth@gmail.com")
                     .version(56)
                     .createdDate(LocalDateTime.now())
                     .updatedDate(LocalDateTime.now())

@@ -1,5 +1,6 @@
 package com.gudmumic.spring.rest;
 
+import com.gudmumic.spring.rest.bootstrap.FlywayMigrationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -21,7 +22,13 @@ public class SpringRestApplication {
             e.printStackTrace();
         }
 */
-		SpringApplication.run(SpringRestApplication.class, args);
+        FlywayMigrationRunner flywayMigrationRunner = new FlywayMigrationRunner();
+        try {
+            flywayMigrationRunner.run(null  );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        SpringApplication.run(SpringRestApplication.class, args);
 	}
 
 }
