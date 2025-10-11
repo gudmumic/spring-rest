@@ -27,6 +27,14 @@ public class Customer {
     private String name;
     @Column(length = 255)
     private String email;
+    @Column(length = 255)
+    private String address;
+    @Column(length = 255)
+    private String city;
+    @Column(length = 20)
+    private String zipCode;
+    @Column(length = 100)
+    private String country;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
