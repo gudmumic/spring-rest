@@ -1,11 +1,13 @@
 package com.gudmumic.spring.rest.service;
 
+import com.gudmumic.spring.rest.entities.Beer;
 import com.gudmumic.spring.rest.mappers.BeerMapper;
 import com.gudmumic.spring.rest.model.BeerDTO;
 import com.gudmumic.spring.rest.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +24,24 @@ public class BeerServiceJpa implements BeerService {
     private final BeerMapper beerMapper;
 
     @Override
-    public List<BeerDTO> getBeerList() {
-        return beerRepository.findAll()
-                            .stream()
-                            .map(beerMapper::beerToBeerDTO)
-                            .collect(Collectors.toList());
+    public List<BeerDTO> getBeerList(String beerName) {
+
+        List<Beer> beerList;
+
+        if (StringUtils.hasText(beerName)) {
+            beerList = getBeerListByName(beerName);
+        } else {
+            beerList = beerRepository.findAll();
+        }
+        return beerList.stream()
+                       .map(beerMapper::beerToBeerDTO)
+                       .collect(Collectors.toList());
     }
+
+    public List<Beer> getBeerListByName(String beerName) {
+        return beerRepository.findAllByNameIsLikeIgnoreCase("%" + beerName + "%");
+    }
+
 
     @Override
     public Optional<BeerDTO> getBeerById(UUID id) {

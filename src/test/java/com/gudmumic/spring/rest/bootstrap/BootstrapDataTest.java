@@ -8,12 +8,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@DataJpaTest
+@SpringBootTest
 @Import(BeerCsvServiceImpl.class)
+@ActiveProfiles("docker-mysql")
 class BootstrapDataTest {
 
     @Autowired
@@ -34,8 +37,6 @@ class BootstrapDataTest {
 
     @Test
     void run() throws Exception {
-        assertThat(beerRepository.count()).isEqualTo(0);
-        assertThat(customerRepository.count()).isEqualTo(0);
 
         bootstrapData.run();
 

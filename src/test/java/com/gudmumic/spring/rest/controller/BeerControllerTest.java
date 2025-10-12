@@ -54,7 +54,7 @@ class BeerControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         beerServiceImpl = new BeerServiceImpl();
-        testBeerDTO = beerServiceImpl.getBeerList().get(0);
+        testBeerDTO = beerServiceImpl.getBeerList(null).get(0);
     }
 
     @Test
@@ -82,13 +82,13 @@ class BeerControllerTest {
     @Test
     void getBeerList() throws Exception {
 
-        given(beerService.getBeerList()).willReturn(beerServiceImpl.getBeerList());
+        given(beerService.getBeerList(null)).willReturn(beerServiceImpl.getBeerList(null));
 
         mockMvc.perform(get(BeerController.BEER_PATH)
                 .accept(String.valueOf(MediaType.APPLICATION_JSON)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(beerServiceImpl.getBeerList().size())));
+                .andExpect(jsonPath("$.length()", is(beerServiceImpl.getBeerList(null).size())));
     }
 
     @Test
@@ -98,7 +98,7 @@ class BeerControllerTest {
         testBeerDTO.setCreatedDate(null);
         testBeerDTO.setUpdatedDate(null);
 
-        given(beerService.createBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.getBeerList().get(1));
+        given(beerService.createBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.getBeerList(null).get(1));
 
         mockMvc.perform(post(BeerController.BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON)
@@ -107,8 +107,8 @@ class BeerControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(header().exists("Location"))
-                .andExpect(jsonPath("$.id", is(beerServiceImpl.getBeerList().get(1).getId().toString())))
-                .andExpect(jsonPath("$.name", is(beerServiceImpl.getBeerList().get(1).getName())));
+                .andExpect(jsonPath("$.id", is(beerServiceImpl.getBeerList(null).get(1).getId().toString())))
+                .andExpect(jsonPath("$.name", is(beerServiceImpl.getBeerList(null).get(1).getName())));
     }
 
     @Test
@@ -122,7 +122,7 @@ class BeerControllerTest {
         testBeerDTO.setCreatedDate(null);
         testBeerDTO.setUpdatedDate(null);
 
-        given(beerService.createBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.getBeerList().get(1));
+        given(beerService.createBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.getBeerList(null).get(1));
 
         MvcResult mvcResult = mockMvc.perform(post(BeerController.BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON)

@@ -25,8 +25,8 @@ public class BeerController {
     private final BeerService beerService;
 
     @GetMapping(value = BEER_PATH)
-    public List<BeerDTO> getBeerList() {
-        return beerService.getBeerList();
+    public List<BeerDTO> getBeerList(@RequestParam(required = false) String beerName) {
+        return beerService.getBeerList(beerName);
     }
 
     @GetMapping(value = BEER_PATH_ID)
