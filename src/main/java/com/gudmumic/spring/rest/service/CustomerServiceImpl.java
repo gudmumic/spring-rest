@@ -24,7 +24,11 @@ public class CustomerServiceImpl implements CustomerService {
                                 .name("Michael Nielsen")
                                 .email("gudmundseth.dk@gmail.com")
                                 .version(58)
-                                .createdDate(LocalDateTime.now())
+                                .address("Henrik Ourens Vei 66, 4632 Kristiansand")
+                                .zipCode("NO-7965")
+                                .city("Trondheim")
+                                .country("Norway")
+                .createdDate(LocalDateTime.now())
                                 .updatedDate(LocalDateTime.now())
                                 .build();
 
@@ -32,6 +36,10 @@ public class CustomerServiceImpl implements CustomerService {
                                 .id(UUID.randomUUID())
                                 .name("Marianne Gudmundseth Nielsen")
                                 .email("gudmundseth@gmail.com")
+                                .address("Henrik Ourens Vei 66, 4632 Kristiansand")
+                                .zipCode("NO-7965")
+                                .city("Trondheim")
+                                .country("Norway")
                                 .version(56)
                                 .createdDate(LocalDateTime.now())
                                 .updatedDate(LocalDateTime.now())

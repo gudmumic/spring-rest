@@ -11,12 +11,14 @@ import java.util.Properties;
 public class SpringRestApplication {
 
 	public static void main(String[] args) {
-        Properties mysqlProps = new Properties();
-        try (FileReader reader = new FileReader("./src/main/resources/application-docker-mysql.properties")) {
-            mysqlProps.load(reader);
-            mysqlProps.forEach((key, value) -> System.setProperty(key.toString(), value.toString()));
-        } catch (IOException e) {
-            e.printStackTrace();
+        Properties environmentProps = new Properties();
+        if (args.length > 0 && args[0].contains(".properties")) {
+            try (FileReader reader = new FileReader(args[0])) {
+                environmentProps.load(reader);
+                environmentProps.forEach((key, value) -> System.setProperty(key.toString(), value.toString()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         SpringApplication.run(SpringRestApplication.class, args);
 	}
