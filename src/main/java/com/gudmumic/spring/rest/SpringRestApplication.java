@@ -1,5 +1,6 @@
 package com.gudmumic.spring.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
+@Slf4j
 @SpringBootApplication
 public class SpringRestApplication {
 
@@ -17,7 +19,7 @@ public class SpringRestApplication {
                 environmentProps.load(reader);
                 environmentProps.forEach((key, value) -> System.setProperty(key.toString(), value.toString()));
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Cannot read properties file: " + args[0], e);
             }
         }
         SpringApplication.run(SpringRestApplication.class, args);

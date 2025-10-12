@@ -2,14 +2,18 @@ package com.gudmumic.spring.rest.bootstrap;
 
 import com.gudmumic.spring.rest.repositories.BeerRepository;
 import com.gudmumic.spring.rest.repositories.CustomerRepository;
+import com.gudmumic.spring.rest.service.BeerCsvService;
+import com.gudmumic.spring.rest.service.BeerCsvServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
+@Import(BeerCsvServiceImpl.class)
 class BootstrapDataTest {
 
     @Autowired
@@ -18,11 +22,14 @@ class BootstrapDataTest {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    BeerCsvService beerCsvService;
+
     BootstrapData bootstrapData;
 
     @BeforeEach
     void setUp() {
-        bootstrapData = new BootstrapData(beerRepository, customerRepository);
+        bootstrapData = new BootstrapData(beerRepository, customerRepository, beerCsvService);
     }
 
     @Test
@@ -32,7 +39,7 @@ class BootstrapDataTest {
 
         bootstrapData.run();
 
-        assertThat(beerRepository.count()).isEqualTo(5);
+        assertThat(beerRepository.count()).isGreaterThan(5);
         assertThat(customerRepository.count()).isEqualTo(2);
     }
 }
