@@ -3,6 +3,7 @@ package com.gudmumic.spring.rest.service;
 import com.gudmumic.spring.rest.entities.Beer;
 import com.gudmumic.spring.rest.mappers.BeerMapper;
 import com.gudmumic.spring.rest.model.BeerDTO;
+import com.gudmumic.spring.rest.model.BeerStyle;
 import com.gudmumic.spring.rest.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -24,18 +25,35 @@ public class BeerServiceJpa implements BeerService {
     private final BeerMapper beerMapper;
 
     @Override
-    public List<BeerDTO> getBeerList(String beerName) {
+    public List<BeerDTO> getBeerList(String beerName, BeerStyle style, Boolean showInventory) {
 
-        List<Beer> beerList;
+        List<Beer> beerList = List.of();
 
-        if (StringUtils.hasText(beerName)) {
+        if (StringUtils.hasText(beerName) && style == null) {
             beerList = getBeerListByName(beerName);
-        } else {
-            beerList = beerRepository.findAll();
         }
+        else if (!StringUtils.hasText(beerName) && style != null) {
+            beerList = getBeerListByStyle(style);
+        }
+        else if (StringUtils.hasText(beerName) && style != null) {
+            beerList = getBeerListByNameAndStyle(beerName, style);
+        }
+
+        if (showInventory != null && !showInventory) {
+            beerList.forEach(beer -> beer.setQuantityOnHand(null));
+        }
+
         return beerList.stream()
                        .map(beerMapper::beerToBeerDTO)
                        .collect(Collectors.toList());
+    }
+
+    public List<Beer> getBeerListByNameAndStyle(String beerName, BeerStyle style) {
+        return beerRepository.findAllByNameIsLikeIgnoreCaseAndStyle(beerName, style);
+    }
+
+    public List<Beer> getBeerListByStyle(BeerStyle style) {
+        return beerRepository.findAllByStyle(style);
     }
 
     public List<Beer> getBeerListByName(String beerName) {

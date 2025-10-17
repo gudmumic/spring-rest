@@ -7,6 +7,7 @@ import com.gudmumic.spring.rest.model.BeerStyle;
 import com.gudmumic.spring.rest.repositories.BeerRepository;
 import com.gudmumic.spring.rest.repositories.CustomerRepository;
 import com.gudmumic.spring.rest.service.BeerCsvService;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.CommandLineRunner;

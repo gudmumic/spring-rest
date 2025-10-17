@@ -1,6 +1,7 @@
 package com.gudmumic.spring.rest.controller;
 
 import com.gudmumic.spring.rest.model.BeerDTO;
+import com.gudmumic.spring.rest.model.BeerStyle;
 import com.gudmumic.spring.rest.service.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +26,10 @@ public class BeerController {
     private final BeerService beerService;
 
     @GetMapping(value = BEER_PATH)
-    public List<BeerDTO> getBeerList(@RequestParam(required = false) String beerName) {
-        return beerService.getBeerList(beerName);
+    public List<BeerDTO> getBeerList(@RequestParam(required = false) String beerName
+                                   , @RequestParam(required = false) BeerStyle style
+                                   , @RequestParam(required = false) Boolean showInventory) {
+        return beerService.getBeerList(beerName, showInventory, );
     }
 
     @GetMapping(value = BEER_PATH_ID)

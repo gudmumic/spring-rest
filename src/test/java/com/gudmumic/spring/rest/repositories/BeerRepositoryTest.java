@@ -2,14 +2,15 @@ package com.gudmumic.spring.rest.repositories;
 
 import com.gudmumic.spring.rest.bootstrap.BootstrapData;
 import com.gudmumic.spring.rest.entities.Beer;
-import com.gudmumic.spring.rest.model.BeerCSVRecord;
 import com.gudmumic.spring.rest.model.BeerStyle;
 import com.gudmumic.spring.rest.service.BeerCsvServiceImpl;
+import jakarta.servlet.annotation.WebInitParam;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
 import java.util.List;

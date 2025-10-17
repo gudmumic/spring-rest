@@ -62,7 +62,7 @@ class BeerControllerIT {
 
     @Test
     void getBeerList() {
-        List<BeerDTO> beerDTOList = beerController.getBeerList(null);
+        List<BeerDTO> beerDTOList = beerController.getBeerList(null, null, false);
         assertThat(beerDTOList.size()).isGreaterThan(5);
     }
 
@@ -71,7 +71,7 @@ class BeerControllerIT {
     @Test
     void getEmptyBeerList() {
         beerRepository.deleteAll();
-        List<BeerDTO> beerDTOList = beerController.getBeerList(null);
+        List<BeerDTO> beerDTOList = beerController.getBeerList(null, null, false);
         assertThat(beerDTOList.size()).isEqualTo(0);
     }
 
@@ -100,7 +100,7 @@ class BeerControllerIT {
                                 .price(BigDecimal.TEN)
                                 .build();
         ResponseEntity response = beerController.createBeer(beerDTO);
-        List<BeerDTO> beerDTOList = beerController.getBeerList(null);
+        List<BeerDTO> beerDTOList = beerController.getBeerList(null, null, false);
         assertThat(beerDTOList.size()).isGreaterThanOrEqualTo(6);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getHeaders().getLocation()).isNotNull();
