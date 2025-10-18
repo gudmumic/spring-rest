@@ -29,7 +29,7 @@ public class BeerController {
     public List<BeerDTO> getBeerList(@RequestParam(required = false) String beerName
                                    , @RequestParam(required = false) BeerStyle style
                                    , @RequestParam(required = false) Boolean showInventory) {
-        return beerService.getBeerList(beerName, showInventory, );
+        return beerService.getBeerList(beerName, style,  showInventory);
     }
 
     @GetMapping(value = BEER_PATH_ID)
