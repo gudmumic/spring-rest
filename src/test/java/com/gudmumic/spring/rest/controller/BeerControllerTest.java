@@ -107,8 +107,8 @@ class BeerControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(header().exists("Location"))
-                .andExpect(jsonPath("$.id", is(beerServiceImpl.getBeerList(null,null, false).get(1).getId().toString())))
-                .andExpect(jsonPath("$.name", is(beerServiceImpl.getBeerList(null,  null,false).get(1).getName())));
+                .andExpect(jsonPath("$content.id", is(beerServiceImpl.getBeerList(null,null, false).get(1).getId().toString())))
+                .andExpect(jsonPath("$content.name", is(beerServiceImpl.getBeerList(null,  null,false).get(1).getName())));
     }
 
     @Test
