@@ -66,6 +66,15 @@ class BeerControllerIT {
         assertThat(beerDTOList.size()).isGreaterThan(5);
     }
 
+    @Test
+    public void getBeerListFromRepo() {
+        List<Beer> beerList = beerRepository.findAll();
+
+        assertThat(beerList).isNotNull();
+        System.out.println("Beer List size: " + beerList.size());
+        assertThat(beerList.size()).isGreaterThan(15);
+    }
+
     @Rollback
     @Transactional
     @Test
@@ -135,7 +144,7 @@ class BeerControllerIT {
         Beer testBeer = beerRepository.findAll().get(0);
 
         Map<String, Object> beerMap = new HashMap<>();
-        beerMap.put("name", "Michael Mielsen with very long name that exceeds the max length of one hundred characters which is not allowed");
+        beerMap.put("name", "Michael Nielsen with very long name that exceeds the max length of one hundred characters which is not allowed");
 
         MvcResult mvcResult = mockMvc.perform(put(BeerController.BEER_PATH_ID, testBeer.getId())
                         .accept(MediaType.APPLICATION_JSON)

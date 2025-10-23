@@ -13,6 +13,8 @@ services:
     ports:
       # <Port exposed> : <MySQL Port running inside container>
       - "3306:3306"
+    networks:
+      - vpcbr
     expose:
       # Opens port 3306 on the container
       - "3306"
@@ -20,6 +22,15 @@ services:
     volumes:
       - ~/Development/mysql-db:/var/lib/mysql
 
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.172.0.0/16
+          gateway: 172.172.0.1
+          aux_addresses:
+            mysql: 172.172.0.2
 # Names our volume
 volumes:
   my-db:
