@@ -28,9 +28,9 @@ public class BeerController {
     @GetMapping(value = BEER_PATH)
     public Page<BeerDTO> getBeerList(@RequestParam(required = false) String beerName
                                    , @RequestParam(required = false) BeerStyle style
-                                   , @RequestParam(required = false) Boolean showInventory
-                                   , @RequestParam(required = false) Integer pageNumber
-                                   , @RequestParam(required = false) Integer pageSize) {
+                                   , @RequestParam(required = false, defaultValue = "false") Boolean showInventory
+                                   , @RequestParam(required = false, defaultValue = "1") Integer pageNumber
+                                   , @RequestParam(required = false, defaultValue = "25") Integer pageSize) {
         return beerService.getBeerList(beerName, style,  showInventory, pageNumber, pageSize);
     }
 

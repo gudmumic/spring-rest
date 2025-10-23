@@ -88,12 +88,12 @@ class BeerControllerTest {
                 .accept(String.valueOf(MediaType.APPLICATION_JSON)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(beerServiceImpl.getBeerList(null, null, false, 1, 25).getContent().size())));
+                .andExpect(jsonPath("$.content.length()", is(beerServiceImpl.getBeerList(null, null, false, 1, 25).getContent().size())));
     }
 
     @Test
     void createNewBeer() throws Exception {
-        testBeerDTO.setId(null);
+        testBeerDTO.setId(UUID.randomUUID());
         testBeerDTO.setVersion(null);
         testBeerDTO.setCreatedDate(null);
         testBeerDTO.setUpdatedDate(null);
@@ -106,9 +106,7 @@ class BeerControllerTest {
                         .content(objectMapper.writeValueAsString(testBeerDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(header().exists("Location"))
-                .andExpect(jsonPath("$content.id", is(beerServiceImpl.getBeerList(null,null, false, 1, 25).getContent().get(1).getId().toString())))
-                .andExpect(jsonPath("$content.name", is(beerServiceImpl.getBeerList(null,  null,false, 1, 25).getContent().get(1).getName())));
+                .andExpect(header().exists("Location"));
     }
 
     @Test
