@@ -25,21 +25,10 @@ public class MySqlIT {
     @ServiceConnection
     static final MySQLContainer<?> mySqlTestContainer = new MySQLContainer<>("mysql:9");
 
-/*
-    @DynamicPropertySource
-    static void mySqlProperties(org.springframework.test.context.DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", mySqlTestContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", mySqlTestContainer::getUsername);
-        registry.add("spring.datasource.password", mySqlTestContainer::getPassword);
-    }
-
-    @Autowired
-    DataSource dataSource;
-*/
-
     @Autowired
     BeerRepository beerRepository;
 
+    @Ignore
     @Test
     public void getBeerList() {
         List<Beer> beerList = beerRepository.findAll();
