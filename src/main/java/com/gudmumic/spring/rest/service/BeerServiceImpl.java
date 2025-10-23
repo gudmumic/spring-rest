@@ -3,6 +3,8 @@ package com.gudmumic.spring.rest.service;
 import com.gudmumic.spring.rest.model.BeerDTO;
 import com.gudmumic.spring.rest.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -86,8 +88,8 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<BeerDTO> getBeerList(String beerName, BeerStyle style, Boolean showInventory) {
-        return new ArrayList<>(beerList.values());
+    public Page<BeerDTO> getBeerList(String beerName, BeerStyle style, Boolean showInventory, Integer pageNumber, Integer pageSize) {
+        return new PageImpl<>(new ArrayList<>(beerList.values()));
     }
 
     @Override

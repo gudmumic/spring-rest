@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import java.util.UUID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,8 +64,8 @@ class BeerControllerIT {
 
     @Test
     void getBeerList() {
-        List<BeerDTO> beerDTOList = beerController.getBeerList(null, null, false);
-        assertThat(beerDTOList.size()).isGreaterThan(5);
+        Page<BeerDTO> beerDTOList = beerController.getBeerList(null, null, false, 1, 25);
+        assertThat(beerDTOList.get().toList().size()).isGreaterThan(5);
     }
 
     @Test
@@ -80,8 +82,8 @@ class BeerControllerIT {
     @Test
     void getEmptyBeerList() {
         beerRepository.deleteAll();
-        List<BeerDTO> beerDTOList = beerController.getBeerList(null, null, false);
-        assertThat(beerDTOList.size()).isEqualTo(0);
+        Page<BeerDTO> beerDTOList = beerController.getBeerList(null, null, false, 1, 25);
+        assertThat(beerDTOList.get().toList().size()).isEqualTo(0);
     }
 
     @Test
@@ -109,8 +111,8 @@ class BeerControllerIT {
                                 .price(BigDecimal.TEN)
                                 .build();
         ResponseEntity response = beerController.createBeer(beerDTO);
-        List<BeerDTO> beerDTOList = beerController.getBeerList(null, null, false);
-        assertThat(beerDTOList.size()).isGreaterThanOrEqualTo(6);
+        Page<BeerDTO> beerDTOList = beerController.getBeerList(null, null, false, 1, 25);
+        assertThat(beerDTOList.get().toList().size()).isGreaterThanOrEqualTo(6);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getHeaders().getLocation()).isNotNull();
 
@@ -176,11 +178,10 @@ class BeerControllerIT {
 
     @Test
     void getBeerListByName() throws Exception {
-        mockMvc.perform(put(BeerController.BEER_PATH)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .queryParam("name", "Carlsberg"))
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "Carlsberg")
+                        .queryParam("pageSize", "800"))
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.size()", is(1)));
+                        .andExpect(jsonPath("$.content.size()", is(1)));
     }
 }
