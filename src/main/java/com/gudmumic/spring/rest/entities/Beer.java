@@ -15,6 +15,8 @@ import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -53,4 +55,40 @@ public class Beer {
     private LocalDateTime createdDate;
     @UpdateTimestamp
     private LocalDateTime updatedDate;
+
+    @OneToMany(mappedBy = "beer")
+    private Set<BeerOrderLine> beerOrderLine;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(name = "beer_category",
+               joinColumns = @JoinColumn(name = "beer_id"),
+               inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
+
+    public void addCategory(Category category) {
+        this.categories.add(category);
+        category.getBeers().add(this);
+    }
+
+    public void removeCategory(Category category) {
+        this.categories.remove(category);
+        category.getBeers().remove(this);
+    }
+
+    @Override
+    public String toString() {
+        return "Beer{" +
+                "id=" + id +
+                ", version=" + version +
+                ", name='" + name + '\'' +
+                ", style=" + style +
+                ", upc='" + upc + '\'' +
+                ", price=" + price +
+                ", quantityOnHand=" + quantityOnHand +
+                ", createdDate=" + createdDate +
+                ", updatedDate=" + updatedDate +
+                ", beerOrderLine=" + (beerOrderLine.isEmpty() ? beerOrderLine : "no order lines")+
+                '}';
+    }
 }

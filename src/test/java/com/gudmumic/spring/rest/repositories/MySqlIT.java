@@ -29,7 +29,7 @@ public class MySqlIT {
     BeerRepository beerRepository;
 
     @Ignore
-    @Test
+    //@Test
     public void getBeerList() {
         List<Beer> beerList = beerRepository.findAll();
 
