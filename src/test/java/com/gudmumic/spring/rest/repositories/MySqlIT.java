@@ -6,6 +6,7 @@ import com.gudmumic.spring.rest.entities.Beer;
 import java.util.List;
 
 import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,21 +16,23 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Ignore
+@Disabled
 @Testcontainers
 @SpringBootTest
 @ActiveProfiles("docker-mysql")
 public class MySqlIT {
 
+/*
     @Container
     @ServiceConnection
     static final MySQLContainer<?> mySqlTestContainer = new MySQLContainer<>("mysql:9");
+*/
 
     @Autowired
     BeerRepository beerRepository;
 
-    @Ignore
-    //@Test
+    @Disabled
+    @Test
     public void getBeerList() {
         List<Beer> beerList = beerRepository.findAll();
 
