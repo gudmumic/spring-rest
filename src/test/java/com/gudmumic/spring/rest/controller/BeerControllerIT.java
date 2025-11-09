@@ -1,5 +1,6 @@
 package com.gudmumic.spring.rest.controller;
 
+import com.gudmumic.spring.rest.TestConstands;
 import com.gudmumic.spring.rest.entities.Beer;
 import com.gudmumic.spring.rest.mappers.BeerMapper;
 import com.gudmumic.spring.rest.model.BeerDTO;
@@ -32,6 +33,8 @@ import java.util.UUID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -60,7 +63,9 @@ class BeerControllerIT {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
     }
 
     @Test
@@ -150,6 +155,7 @@ class BeerControllerIT {
         beerMap.put("name", "Michael Nielsen with very long name that exceeds the max length of one hundred characters which is not allowed");
 
         MvcResult mvcResult = mockMvc.perform(put(BeerController.BEER_PATH_ID, testBeer.getId())
+                        .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))
@@ -180,6 +186,7 @@ class BeerControllerIT {
     @Test
     void getBeerListByName() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD))
                         .queryParam("beerName", "Carlsberg")
                         .queryParam("pageSize", "800"))
                         .andExpect(status().isOk())
@@ -196,6 +203,7 @@ class BeerControllerIT {
         beerDTO.setName("Updated Beer Name");
 
         MvcResult result = mockMvc.perform(put(BeerController.BEER_PATH_ID, beer.getId())
+                        .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerDTO)))
@@ -207,6 +215,7 @@ class BeerControllerIT {
         beerDTO.setName("Updated Beer Name 2");
 
         MvcResult result2 = mockMvc.perform(put(BeerController.BEER_PATH_ID, beer.getId())
+                        .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerDTO)))
@@ -214,5 +223,13 @@ class BeerControllerIT {
                 .andReturn();
 
         System.out.println(result2.getResponse().getStatus());
+    }
+
+    @Test
+    void noAuthTest() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                        .queryParam("pageSize", "800"))
+                .andExpect(status().isUnauthorized());
     }
 }

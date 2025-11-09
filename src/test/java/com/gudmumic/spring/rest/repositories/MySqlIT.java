@@ -4,8 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.gudmumic.spring.rest.entities.Beer;
 import java.util.List;
-
-import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +20,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("docker-mysql")
 public class MySqlIT {
 
-/*
     @Container
     @ServiceConnection
     static final MySQLContainer<?> mySqlTestContainer = new MySQLContainer<>("mysql:9");
-*/
 
     @Autowired
     BeerRepository beerRepository;

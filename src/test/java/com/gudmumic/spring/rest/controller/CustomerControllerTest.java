@@ -1,32 +1,36 @@
 package com.gudmumic.spring.rest.controller;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import com.gudmumic.spring.rest.TestConstands;
+import com.gudmumic.spring.rest.configuratiom.SpringSecurityConfig;
 import com.gudmumic.spring.rest.model.CustomerDTO;
 import com.gudmumic.spring.rest.service.CustomerService;
 import com.gudmumic.spring.rest.service.CustomerServiceImpl;
+import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import tools.jackson.databind.ObjectMapper;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@WebMvcTest(CustomerController.class)
+@EnableWebMvc
+@Import(SpringSecurityConfig.class)
 class CustomerControllerTest {
 
     @Autowired
@@ -58,6 +62,7 @@ class CustomerControllerTest {
         given(customerService.getCustomerById(testCustomerDTO.getId())).willReturn(Optional.ofNullable(testCustomerDTO));
 
         mockMvc.perform(get( CustomerController.CUSTOMER_PATH_ID, testCustomerDTO.getId())
+                        .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD))
                 .accept((MediaType.APPLICATION_JSON)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -70,7 +75,8 @@ class CustomerControllerTest {
 
         given(customerService.getCustomerById(any(UUID.class))).willReturn(Optional.empty());
 
-        mockMvc.perform(get( CustomerController.CUSTOMER_PATH_ID, UUID.randomUUID()))
+        mockMvc.perform(get( CustomerController.CUSTOMER_PATH_ID, UUID.randomUUID())
+                .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD)))
                 .andExpect(status().isNotFound());
     }
 
@@ -80,6 +86,7 @@ class CustomerControllerTest {
         given(customerService.getCustomerList()).willReturn(customerServiceImpl.getCustomerList());
 
         mockMvc.perform(get(CustomerController.CUSTOMER_PATH)
+                .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD))
                 .accept(String.valueOf(MediaType.APPLICATION_JSON)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -98,7 +105,8 @@ class CustomerControllerTest {
         mockMvc.perform(post(CustomerController.CUSTOMER_PATH)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testCustomerDTO)))
+                        .content(objectMapper.writeValueAsString(testCustomerDTO))
+                .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(header().exists("Location"))
@@ -111,6 +119,7 @@ class CustomerControllerTest {
         testCustomerDTO.setName("My New Beer Name");
 
         mockMvc.perform(put(CustomerController.CUSTOMER_PATH_ID, testCustomerDTO.getId())
+                .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testCustomerDTO)));
@@ -124,6 +133,7 @@ class CustomerControllerTest {
         given(customerService.deleteCustomer(any(UUID.class))).willReturn(true);
 
         mockMvc.perform(delete(CustomerController.CUSTOMER_PATH_ID, testCustomerDTO.getId())
+                .with(httpBasic(TestConstands.USER, TestConstands.PASSWORD))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
