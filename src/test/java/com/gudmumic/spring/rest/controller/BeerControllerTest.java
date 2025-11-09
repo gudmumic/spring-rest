@@ -1,7 +1,7 @@
 package com.gudmumic.spring.rest.controller;
 
 import com.gudmumic.spring.rest.TestConstands;
-import com.gudmumic.spring.rest.configuratiom.SpringSecurityConfig;
+import com.gudmumic.spring.rest.configuration.SpringSecurityConfig;
 import com.gudmumic.spring.rest.model.BeerDTO;
 import com.gudmumic.spring.rest.service.BeerService;
 import com.gudmumic.spring.rest.service.BeerServiceImpl;
@@ -11,12 +11,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureWebMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import tools.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
@@ -32,8 +33,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@EnableWebMvc
-@Import(SpringSecurityConfig.class)
+@WebMvcTest(BeerController.class)
+@AutoConfigureWebMvc
 class BeerControllerTest {
 
     @Autowired

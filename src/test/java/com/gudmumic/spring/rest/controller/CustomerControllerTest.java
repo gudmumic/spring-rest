@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.gudmumic.spring.rest.TestConstands;
-import com.gudmumic.spring.rest.configuratiom.SpringSecurityConfig;
 import com.gudmumic.spring.rest.model.CustomerDTO;
 import com.gudmumic.spring.rest.service.CustomerService;
 import com.gudmumic.spring.rest.service.CustomerServiceImpl;
@@ -22,15 +21,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureWebMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import tools.jackson.databind.ObjectMapper;
 
-@EnableWebMvc
-@Import(SpringSecurityConfig.class)
+@WebMvcTest(CustomerController.class)
+@AutoConfigureWebMvc
 class CustomerControllerTest {
 
     @Autowired

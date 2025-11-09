@@ -1,4 +1,4 @@
-package com.gudmumic.spring.rest.configuratiom;
+package com.gudmumic.spring.rest.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
